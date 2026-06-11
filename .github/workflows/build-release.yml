@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: javaswitcher
-        run: npm ci
+        run: npm install
 
       - name: Build Electron app
         working-directory: javaswitcher
@@ -34,17 +34,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JDK-Switcher-Windows-ZIP
+          path: javaswitcher/out/make/zip/**/*.zip
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: javaswitcher/out/**/*.exe
+          files: |
+            javaswitcher/out/make/squirrel.windows/**/*.exe
+            javaswitcher/out/make/squirrel.windows/**/*.nupkg
+            javaswitcher/out/make/zip/**/*.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: JDK-Switcher-Windows
-          path: javaswitcher/out/**/*.exe

@@ -109,18 +109,25 @@
           </div>
         </div>
 
-        <div id="view-repo" class="view">
+        <div id="view-about" class="view">
           <div class="view-header">
-            <h1 data-i18n="repo_title">仓库介绍</h1>
+            <h1 data-i18n="about_title">关于</h1>
+            <div class="view-actions">
+              <button id="btn-check-update" class="btn btn-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span data-i18n="about_check_update">检查更新</span>
+              </button>
+            </div>
           </div>
-          <div class="repo-content">
-            <div class="repo-section">
-              <p data-i18n="repo_description" style="font-size:14px;color:var(--text-secondary);line-height:1.6">
-                JDK Switcher 是一个基于 Electron 的 Java JDK 版本切换工具
-              </p>
+          <div class="about-content">
+            <div class="about-section">
+              <h3>JDK Switcher</h3>
+              <p data-i18n="about_description">基于 Electron 的 Java JDK 版本切换工具</p>
+              <p class="about-meta"><span data-i18n="about_version">版本</span> <span id="app-version">1.0.0</span></p>
+              <p id="update-status" style="font-size:12px;color:var(--text-muted);margin-top:8px"></p>
             </div>
 
-            <div class="repo-section">
+            <div class="about-section">
               <h3 data-i18n="repo_features_title">功能特性</h3>
               <ul class="feature-list">
                 <li data-i18n="repo_features.0">一键切换 JDK 版本</li>
@@ -131,7 +138,7 @@
               </ul>
             </div>
 
-            <div class="repo-section">
+            <div class="about-section">
               <h3 data-i18n="repo_tech_title">技术栈</h3>
               <ul class="tech-list">
                 <li data-i18n="repo_tech.0">Electron</li>
@@ -140,7 +147,7 @@
               </ul>
             </div>
 
-            <div class="repo-section">
+            <div class="about-section">
               <h3>GitHub</h3>
               <p style="font-size:13px;color:var(--text-secondary);line-height:1.6">
                 <a href="https://github.com/ChanYeeSum/javaswitcher" target="_blank" style="color:var(--accent);text-decoration:none">
@@ -152,31 +159,8 @@
               </p>
             </div>
 
-            <div class="repo-section">
-              <p class="about-meta" data-i18n="repo_license">MIT License</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="view-about" class="view">
-          <div class="view-header">
-            <h1>关于</h1>
-            <div class="view-actions">
-              <button id="btn-check-update" class="btn btn-secondary">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                检查更新
-              </button>
-            </div>
-          </div>
-          <div class="about-content">
             <div class="about-section">
-              <h3>JDK Switcher</h3>
-              <p>基于 Electron 的 Java JDK 版本切换工具</p>
-              <p class="about-meta">版本 <span id="app-version">1.0.0</span></p>
-              <p id="update-status" style="font-size:12px;color:var(--text-muted);margin-top:8px"></p>
-            </div>
-            <div class="about-section">
-              <h3>使用说明</h3>
+              <h3 data-i18n="repo_tech_title">使用说明</h3>
               <ul>
                 <li>点击"刷新"自动扫描常用目录中的 JDK 安装</li>
                 <li>在"扫描路径"中添加自定义 JDK 安装目录</li>
@@ -184,6 +168,10 @@
                 <li>切换后 JAVA_HOME 和 PATH 环境变量将自动更新</li>
                 <li>切换后需重新打开命令行窗口生效</li>
               </ul>
+            </div>
+
+            <div class="about-section">
+              <p class="about-meta" data-i18n="repo_license">MIT License</p>
             </div>
           </div>
         </div>

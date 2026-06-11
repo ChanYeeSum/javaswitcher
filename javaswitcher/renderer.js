@@ -8,6 +8,8 @@ const COMMON_SCAN_PATHS = [
   'C:\\Program Files\\Zulu',
 ];
 
+const appVersion = '1.0.0';
+
 document.getElementById('btn-minimize').addEventListener('click', () => window.api.minimize());
 document.getElementById('btn-maximize').addEventListener('click', () => window.api.maximize());
 document.getElementById('btn-close').addEventListener('click', () => window.api.close());
@@ -294,6 +296,42 @@ async function init() {
   window.__currentJdk = await window.api.getCurrentJdk();
   updateCurrentInfo();
   scanJdks();
+  displayVersion();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+async function displayVersion() {
+  const versionEl = document.getElementById('app-version');
+  if (versionEl) {
+    versionEl.textContent = appVersion;
+  }
+}
+
+async function checkForUpdates() {
+  const btn = document.getElementById('btn-check-update');
+  const statusEl = document.getElementById('update-status');
+
+  if (btn) btn.disabled = true;
+  if (statusEl) statusEl.textContent = '正在检查更新...';
+
+  try {
+    const result = await window.api.checkForUpdates();
+    if (result.hasUpdate) {
+      if (statusEl) {
+        statusEl.innerHTML = '发现新版本：<strong>' + result.latestVersion + '</strong> ' +
+          '(当前 ' + result.currentVersion + ') ' +
+          '<a href="' + result.downloadUrl + '" target="_blank" style="color:var(--accent);text-decoration:underline">立即下载</a>';
+      }
+      showToast('发现新版本 ' + result.latestVersion, 'info');
+    } else {
+      if (statusEl) statusEl.textContent = '已是最新版本';
+      showToast('已是最新版本', 'success');
+    }
+  } catch (e) {
+    if (statusEl) statusEl.textContent = '检查失败';
+    showToast('检查更新失败', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+document.getElementById('btn-check-update').addEventListener('click', checkForUpdates);

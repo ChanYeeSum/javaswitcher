@@ -11,8 +11,10 @@ module.exports = {
         name: 'jdk_switcher',
         productName: 'JDK Switcher',
         exe: 'jdk-switcher.exe',
+        setupExe: 'JDK-Switcher-Setup.exe',
         authors: 'ChanYeeSum',
         description: 'Quick switch between JDK versions on Windows',
+        noMsi: true,
       },
     },
     {

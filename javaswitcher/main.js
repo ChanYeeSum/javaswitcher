@@ -4,9 +4,11 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 const os = require('os');
 const { promisify } = require('util');
+const { fetch } = require('undici');
 const setTimeout = promisify(global.setTimeout);
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
+const APP_VERSION = app.getVersion();
 
 const COMMON_SCAN_PATHS = [
   'C:\\Program Files\\Java',
@@ -355,6 +357,30 @@ ipcMain.handle('remove-custom-path', (_, customPath) => {
 
 ipcMain.handle('get-custom-paths', () => {
   return (loadConfig().customPaths || []);
+});
+
+ipcMain.handle('check-for-updates', async () => {
+  try {
+    const response = await fetch('https://api.github.com/repos/ChanYeeSum/javaswitcher/releases/latest', {
+      headers: { 'User-Agent': 'JDK-Switcher' },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) return { hasUpdate: false };
+    const data = await response.json();
+    const latestVersion = data.tag_name.replace(/^v/, '');
+    const currentVersion = APP_VERSION;
+    const hasUpdate = latestVersion !== currentVersion;
+    return {
+      hasUpdate,
+      currentVersion,
+      latestVersion,
+      releaseNotes: data.body,
+      downloadUrl: data.html_url,
+    };
+  } catch (e) {
+    console.error('Check update failed:', e);
+    return { hasUpdate: false, error: e.message };
+  }
 });
 
 ipcMain.handle('check-permissions', () => {

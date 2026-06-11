@@ -26,3 +26,6 @@ Thumbs.db
 
 # App data
 AppData/
+
+# Spec workflow
+.spec-workflow/

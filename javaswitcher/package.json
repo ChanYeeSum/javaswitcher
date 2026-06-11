@@ -9,12 +9,21 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
-  "keywords": ["jdk", "java", "switcher", "electron"],
+  "keywords": [
+    "jdk",
+    "java",
+    "switcher",
+    "electron"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.0.0",
     "@electron-forge/maker-squirrel": "^7.0.0",
     "@electron-forge/maker-zip": "^7.0.0",
-    "electron": "^30.0.0"
+    "electron": "^30.0.0",
+    "electron-builder": "^26.15.2"
+  },
+  "allowScripts": {
+    "electron-builder@26.15.2": true
   }
 }

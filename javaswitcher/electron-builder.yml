@@ -1,0 +1,30 @@
+﻿appId: com.chanyeesum.jdk-switcher
+productName: JDK Switcher
+copyright: Copyright © 2026 ChanYeeSum
+
+directories:
+  output: out/builder
+  buildResources: .
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  icon: null
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: null
+  uninstallerIcon: null
+  license: ../LICENSE
+
+portable:
+  artifactName: "JDK-Switcher-Portable-${version}.${ext}"
+
+extraMetadata:
+  main: main.js

@@ -1,4 +1,4 @@
-name: Build Release
+﻿name: Build Release
 
 on:
   push:
@@ -22,21 +22,33 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install dependencies (forge)
         working-directory: javaswitcher
         run: npm install
 
-      - name: Build Electron app
+      - name: Build Squirrel installer (forge)
         working-directory: javaswitcher
         run: npm run make
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload ZIP artifact
+      - name: Build Portable + NSIS (electron-builder)
+        working-directory: javaswitcher
+        run: npx electron-builder --win
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Squirrel installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: JDK-Switcher-Windows-ZIP
-          path: javaswitcher/out/make/zip/**/*.zip
+          name: JDK-Switcher-Squirrel
+          path: javaswitcher/out/make/squirrel.windows/**/*
+
+      - name: Upload builder artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: JDK-Switcher-Builder
+          path: javaswitcher/out/builder/**/*
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -45,7 +57,8 @@ jobs:
           files: |
             javaswitcher/out/make/squirrel.windows/**/*.exe
             javaswitcher/out/make/squirrel.windows/**/*.nupkg
-            javaswitcher/out/make/zip/**/*.zip
+            javaswitcher/out/builder/*.exe
+            javaswitcher/out/builder/*.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

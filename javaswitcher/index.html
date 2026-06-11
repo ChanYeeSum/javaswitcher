@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>JDK Switcher</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="titlebar">
+      <div id="titlebar-drag">
+        <span class="title-text">JDK Switcher</span>
+      </div>
+      <div id="titlebar-controls">
+        <button class="title-btn" id="btn-theme" title="切换主题">
+          <svg class="theme-icon-light" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="theme-icon-dark" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+        <button class="title-btn" id="btn-minimize">
+          <svg width="12" height="12" viewBox="0 0 12 12"><rect y="5" width="12" height="1.5" fill="currentColor"/></svg>
+        </button>
+        <button class="title-btn" id="btn-maximize">
+          <svg width="12" height="12" viewBox="0 0 12 12"><rect x="1.5" y="1.5" width="9" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="title-btn title-btn-close" id="btn-close">
+          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div id="layout">
+      <nav id="sidebar">
+        <div class="nav-section">
+          <span class="nav-section-title">菜单</span>
+          <button class="nav-item active" data-view="jdks">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+            JDK 版本
+          </button>
+          <button class="nav-item" data-view="paths">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            扫描路径
+          </button>
+          <button class="nav-item" data-view="about">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            关于
+          </button>
+        </div>
+
+        <div id="sidebar-footer">
+          <div id="current-info">
+            <span id="current-label">当前 JDK</span>
+            <span id="current-path">未检测到</span>
+          </div>
+        </div>
+      </nav>
+
+      <main id="content">
+        <div id="view-jdks" class="view active">
+          <div class="view-header">
+            <h1>JDK 版本</h1>
+            <div class="view-actions">
+              <button id="btn-refresh" class="btn btn-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                刷新
+              </button>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M12 2v20M2 12h20"/><path d="M12 2l6 6M12 2L6 8M12 22l-6-6M12 22l6-6"/></svg>
+            自动递归扫描子文件夹（最多 3 层深度）
+          </p>
+          <div id="jdk-list" class="list-container">
+            <div class="empty-state">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+              <span>点击"刷新"扫描 JDK 安装</span>
+            </div>
+          </div>
+          <div id="switch-result" class="hidden"></div>
+        </div>
+
+        <div id="view-paths" class="view">
+          <div class="view-header">
+            <h1>扫描路径</h1>
+            <div class="view-actions">
+              <button id="btn-add-path" class="btn btn-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                添加路径
+              </button>
+            </div>
+          </div>
+          <div id="common-paths-section">
+            <h2 class="subsection-title">常用路径</h2>
+            <ul id="common-paths-list" class="path-list"></ul>
+          </div>
+          <div id="custom-paths-section">
+            <h2 class="subsection-title">自定义路径</h2>
+            <ul id="custom-paths-list" class="path-list">
+              <li class="empty-state small"><span>暂无自定义路径</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="view-about" class="view">
+          <div class="view-header">
+            <h1>关于</h1>
+          </div>
+          <div class="about-content">
+            <div class="about-section">
+              <h3>JDK Switcher</h3>
+              <p>基于 Electron 的 Java JDK 版本切换工具</p>
+              <p class="about-meta">版本 1.0.0</p>
+            </div>
+            <div class="about-section">
+              <h3>使用说明</h3>
+              <ul>
+                <li>点击"刷新"自动扫描常用目录中的 JDK 安装</li>
+                <li>在"扫描路径"中添加自定义 JDK 安装目录</li>
+                <li>点击 JDK 卡片上的"切换"按钮立即切换版本</li>
+                <li>切换后 JAVA_HOME 和 PATH 环境变量将自动更新</li>
+                <li>切换后需重新打开命令行窗口生效</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast-container"></div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

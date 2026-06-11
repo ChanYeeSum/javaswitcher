@@ -1,0 +1,14 @@
+{
+  "name": "jdk-switcher",
+  "version": "1.0.0",
+  "description": "Quick switch between JDK versions on Windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": ["jdk", "java", "switcher", "electron"],
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^30.0.0"
+  }
+}

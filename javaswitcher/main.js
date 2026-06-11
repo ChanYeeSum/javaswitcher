@@ -1,10 +1,9 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, net } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
 const os = require('os');
 const { promisify } = require('util');
-const { fetch } = require('undici');
 const setTimeout = promisify(global.setTimeout);
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
@@ -361,12 +360,29 @@ ipcMain.handle('get-custom-paths', () => {
 
 ipcMain.handle('check-for-updates', async () => {
   try {
-    const response = await fetch('https://api.github.com/repos/ChanYeeSum/javaswitcher/releases/latest', {
-      headers: { 'User-Agent': 'JDK-Switcher' },
-      signal: AbortSignal.timeout(5000),
+    const data = await new Promise((resolve, reject) => {
+      const request = net.request({
+        method: 'GET',
+        url: 'https://api.github.com/repos/ChanYeeSum/javaswitcher/releases/latest',
+        headers: { 'User-Agent': 'JDK-Switcher' },
+      });
+      request.on('response', (response) => {
+        let body = '';
+        response.on('data', (chunk) => { body += chunk; });
+        response.on('end', () => {
+          if (response.statusCode === 200) {
+            try { resolve(JSON.parse(body)); }
+            catch { reject(new Error('Invalid JSON')); }
+          } else {
+            reject(new Error(`HTTP ${response.statusCode}`));
+          }
+        });
+      });
+      request.on('error', (err) => reject(err));
+      request.setTimeout(5000, () => { request.destroy(); reject(new Error('timeout')); });
+      request.end();
     });
-    if (!response.ok) return { hasUpdate: false };
-    const data = await response.json();
+
     const latestVersion = data.tag_name.replace(/^v/, '');
     const currentVersion = APP_VERSION;
     const hasUpdate = latestVersion !== currentVersion;

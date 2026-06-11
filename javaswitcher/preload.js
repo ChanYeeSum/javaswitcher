@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('api', {
   removeCustomPath: (path) => ipcRenderer.invoke('remove-custom-path', path),
   getCustomPaths: () => ipcRenderer.invoke('get-custom-paths'),
   checkPermissions: () => ipcRenderer.invoke('check-permissions'),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   minimize: () => ipcRenderer.invoke('window-minimize'),
   maximize: () => ipcRenderer.invoke('window-maximize'),
   close: () => ipcRenderer.invoke('window-close'),

@@ -415,8 +415,9 @@ html, body {
 .path-item-remove:hover { color: var(--danger); }
 
 .about-content { max-width: 480px; }
+.repo-content { max-width: 560px; }
 
-.about-section { margin-bottom: 28px; }
+.about-section, .repo-section { margin-bottom: 28px; }
 
 .about-section h3 {
   font-size: 15px;
@@ -453,6 +454,47 @@ html, body {
   border-radius: 50%;
   background: var(--accent);
   opacity: 0.5;
+}
+
+/* Feature list and tech list styling */
+.feature-list, .tech-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.feature-list li, .tech-list li {
+  position: relative;
+  padding: 6px 0 6px 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.tech-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Language button in titlebar */
+#btn-lang {
+  min-width: 28px;
+}
+
+#btn-lang span {
+  display: inline-block;
+  line-height: 1;
 }
 
 #toast-container {

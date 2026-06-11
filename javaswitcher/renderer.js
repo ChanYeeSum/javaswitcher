@@ -10,6 +10,118 @@ const COMMON_SCAN_PATHS = [
 
 const appVersion = '1.0.0';
 
+// i18n 支持
+const locales = {
+  zh: {
+    app_name: 'JDK Switcher',
+    nav_menu: '菜单',
+    nav_jdks: 'JDK 版本',
+    nav_paths: '扫描路径',
+    nav_about: '关于',
+    nav_repo: '仓库介绍',
+    jdks_title: 'JDK 版本',
+    jdks_refresh: '刷新',
+    jdks_scan_hint: '自动递归扫描子文件夹（最多 3 层深度）',
+    jdks_switch: '切换',
+    jdks_current: '当前使用',
+    paths_title: '扫描路径',
+    paths_add: '添加路径',
+    paths_common: '常用路径',
+    paths_custom: '自定义路径',
+    about_title: '关于',
+    about_check_update: '检查更新',
+    about_version: '版本',
+    repo_title: '仓库介绍',
+    repo_description: 'JDK Switcher 是一个基于 Electron 的 Java JDK 版本切换工具',
+    repo_features_title: '功能特性',
+    repo_features: [
+      '一键切换 JDK 版本',
+      '自动递归扫描 JDK 安装目录（最多 3 层深度）',
+      '支持亮色/暗色主题切换',
+      '自定义扫描路径',
+      '切换后自动验证环境变量',
+    ],
+    repo_tech_title: '技术栈',
+    repo_tech: [
+      'Electron',
+      'Node.js',
+      'Vanilla JavaScript',
+    ],
+    repo_license: 'MIT License',
+    current_label: '当前 JDK',
+    switch_result_title: '切换验证结果',
+  },
+  en: {
+    app_name: 'JDK Switcher',
+    nav_menu: 'Menu',
+    nav_jdks: 'JDK Versions',
+    nav_paths: 'Scan Paths',
+    nav_about: 'About',
+    nav_repo: 'Repository',
+    jdks_title: 'JDK Versions',
+    jdks_refresh: 'Refresh',
+    jdks_scan_hint: 'Auto recursive scan (max 3 levels)',
+    jdks_switch: 'Switch',
+    jdks_current: 'Current',
+    paths_title: 'Scan Paths',
+    paths_add: 'Add Path',
+    paths_common: 'Common Paths',
+    paths_custom: 'Custom Paths',
+    about_title: 'About',
+    about_check_update: 'Check Update',
+    about_version: 'Version',
+    repo_title: 'Repository',
+    repo_description: 'JDK Switcher is an Electron-based Java JDK version switcher tool',
+    repo_features_title: 'Features',
+    repo_features: [
+      'One-click JDK switching',
+      'Auto recursive scan (max 3 levels)',
+      'Light/Dark theme support',
+      'Custom scan paths',
+      'Auto-verify environment variables after switch',
+    ],
+    repo_tech_title: 'Tech Stack',
+    repo_tech: [
+      'Electron',
+      'Node.js',
+      'Vanilla JavaScript',
+    ],
+    repo_license: 'MIT License',
+    current_label: 'Current JDK',
+    switch_result_title: 'Switch Verification Result',
+  },
+};
+
+let currentLang = localStorage.getItem('lang') || 'zh';
+
+function t(key) {
+  const keys = key.split('.');
+  let value = locales[currentLang];
+  for (const k of keys) {
+    value = value?.[k];
+  }
+  return value || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  applyTranslations();
+}
+
+function applyTranslations() {
+  // 更新所有带有 data-i18n 属性的元素
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+  // 更新 placeholder
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    el.setAttribute('placeholder', t(key));
+  });
+}
+
 document.getElementById('btn-minimize').addEventListener('click', () => window.api.minimize());
 document.getElementById('btn-maximize').addEventListener('click', () => window.api.maximize());
 document.getElementById('btn-close').addEventListener('click', () => window.api.close());
@@ -29,6 +141,32 @@ function toggleTheme() {
 
 document.getElementById('btn-theme').addEventListener('click', toggleTheme);
 initTheme();
+
+// 语言切换
+function initLang() {
+  updateLangButton();
+  setLang(currentLang);
+}
+
+function toggleLang() {
+  setLang(currentLang === 'zh' ? 'en' : 'zh');
+  updateLangButton();
+}
+
+function updateLangButton() {
+  const btnLang = document.getElementById('btn-lang');
+  if (btnLang) {
+    btnLang.innerHTML = currentLang === 'zh' ? '<span style="font-size:11px;font-weight:600;">中</span>' : '<span style="font-size:10px;font-weight:600;">EN</span>';
+    btnLang.setAttribute('title', currentLang === 'zh' ? 'Switch to English' : '切换到中文');
+  }
+}
+
+// 在 titlebar 添加语言切换按钮的监听（如果存在）
+const btnLang = document.getElementById('btn-lang');
+if (btnLang) {
+  btnLang.addEventListener('click', toggleLang);
+}
+initLang();
 
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
@@ -297,6 +435,7 @@ async function init() {
   updateCurrentInfo();
   scanJdks();
   displayVersion();
+  applyTranslations();
 }
 
 async function displayVersion() {

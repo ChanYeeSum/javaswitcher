@@ -4,11 +4,39 @@
   "description": "Quick switch between JDK versions on Windows",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "make": "electron-forge make"
   },
   "keywords": ["jdk", "java", "switcher", "electron"],
   "license": "MIT",
   "devDependencies": {
+    "@electron-forge/cli": "^7.0.0",
+    "@electron-forge/maker-squirrel": "^7.0.0",
+    "@electron-forge/maker-zip": "^7.0.0",
     "electron": "^30.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "asar": true,
+        "icon": "icon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "jdk_switcher",
+            "productName": "JDK Switcher",
+            "exe": "jdk-switcher.exe"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "config": {
+            "name": "jdk-switcher"
+          }
+        }
+      ]
+    }
   }
 }

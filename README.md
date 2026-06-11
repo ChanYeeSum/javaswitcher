@@ -8,8 +8,7 @@ Electron-based Java JDK version switcher tool for Windows.
 
 ![JDK Versions](screenshots/01-jdk-versions.png)
 ![Scan Paths](screenshots/02-scan-paths.png)
-![Repository](screenshots/03-repo-intro.png)
-![About](screenshots/04-about.png)
+![About](screenshots/03-about.png)
 
 ## 功能特性 / Features
 

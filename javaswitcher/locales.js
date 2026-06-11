@@ -15,7 +15,6 @@ const locales = {
     nav_jdks: 'JDK 版本',
     nav_paths: '扫描路径',
     nav_about: '关于',
-    nav_repo: '仓库介绍',
 
     // JDK 版本页面
     jdks_title: 'JDK 版本',
@@ -87,7 +86,6 @@ const locales = {
     nav_jdks: 'JDK Versions',
     nav_paths: 'Scan Paths',
     nav_about: 'About',
-    nav_repo: 'Repository',
 
     // JDK Versions Page
     jdks_title: 'JDK Versions',

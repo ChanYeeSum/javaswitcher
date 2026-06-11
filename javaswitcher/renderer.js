@@ -11,7 +11,7 @@ const COMMON_SCAN_PATHS = [
 const appVersion = '1.0.0';
 
 // i18n 支持
-const locales = {
+/* const locales = {
   zh: {
     app_name: 'JDK Switcher',
     nav_menu: '菜单',
@@ -86,7 +86,9 @@ const locales = {
     current_label: 'Current JDK',
     switch_result_title: 'Switch Verification Result',
   },
-};
+*/
+// i18n strings are loaded from locales.js which defines a global `locales` object.
+// No need to require here because node integration is disabled in the renderer.
 
 let currentLang = localStorage.getItem('lang') || 'zh';
 
@@ -164,13 +166,24 @@ if (btnLang) {
 }
 initLang();
 
+// Navigation handling – guard against missing view elements (e.g., after merging repo into About)
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
+    // Update active nav button
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     item.classList.add('active');
+    // Hide all view containers
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + item.dataset.view).classList.add('active');
-    document.getElementById('switch-result').classList.add('hidden');
+    // Show the target view if it exists
+    const targetView = document.getElementById('view-' + item.dataset.view);
+    if (targetView) {
+      targetView.classList.add('active');
+    }
+    // Hide any previous switch result panel
+    const switchResult = document.getElementById('switch-result');
+    if (switchResult) {
+      switchResult.classList.add('hidden');
+    }
   });
 });
 
